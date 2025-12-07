@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
   <div id="root"></div>
   
   <script type="text/babel">
-    const { useState, useEffect, useMemo } = React;
+    const { useState, useEffect } = React;
     
     // Lucide Icons Components
     const Search = (props) => React.createElement('i', { 'data-lucide': 'search', ...props });
@@ -117,68 +117,69 @@ const LimitInputGroup = ({ title, minVal, maxVal, onMinChange, onMaxChange, isMa
   const min = parseNumber(minVal);
   const max = parseNumber(maxVal);
   
-  // Validation logic
-  const isMinError = min !== '' && min < minChipLimit;
-  const isMaxError = max !== '' && min !== '' && max !== null && max < min;
+  // Only validate if values are entered
+  const isMinError = min !== '' && minChipLimit && min < minChipLimit;
+  const isMaxError = max !== '' && min !== '' && max < min;
 
-  // 3. Ratio display format: Min: X% / Max: Y%
   return (
-    <div className={`flex flex-col p-2 rounded h-full ${isMain ? 'bg-amber-50 border border-amber-200 shadow-sm' : 'bg-gray-50 border border-gray-200'}`}>
-      <div className={`text-center mb-1 ${isMain ? 'text-amber-800 font-bold' : 'text-gray-500 font-medium'}`}>
-         {/* Bet title on the first line, ratios on the second line */}
-        <div className="text-sm">{title}</div>
-        {/* Updated Ratio Display */}
-        <div className="text-xs font-mono text-gray-400 flex justify-center gap-2">
-            <span className="font-semibold">Min: {minRatio}%</span>
-            <span className="font-semibold">Max: {maxRatio}%</span>
+    <div className={`flex flex-col p-3 rounded border ${isMain ? 'bg-amber-50 border-amber-200 shadow-sm' : 'bg-gray-50 border-gray-200'}`}>
+      {/* Title and Ratios - Fixed height */}
+      <div className={`text-center mb-2 ${isMain ? 'text-amber-800 font-bold' : 'text-gray-500 font-medium'}`}>
+        <div className="text-sm font-semibold h-5 flex items-center justify-center">{title}</div>
+        <div className="text-xs font-mono text-gray-400 h-4 flex items-center justify-center gap-2 mt-1">
+          <span>Min: {minRatio}%</span>
+          <span>Max: {maxRatio}%</span>
         </div>
       </div>
       
-      {/* Min Limit Input */}
-      <div className="mb-3">
-        <div className="flex items-center gap-1 mb-1">
-          <span className="text-[10px] text-gray-400 w-6 text-right font-medium">Min</span>
-          <input
-            type="text"
-            value={formatNumber(minVal)}
-            onChange={(e) => onMinChange(parseNumber(e.target.value))}
-            className={`w-full text-right p-1 text-sm border rounded focus:ring-1 focus:outline-none transition-all
-              ${isMain ? 'border-amber-300 focus:border-amber-500' : 'border-gray-300 focus:border-blue-500'}
-              ${isMinError ? 'border-red-500 bg-red-50 focus:ring-red-200' : ''}
-            `}
-          />
+      {/* Min/Max Input Container - Flex grow to push inputs to bottom */}
+      <div className="flex-1 flex flex-col justify-end gap-2">
+        {/* Min Limit Input */}
+        <div>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-gray-500 w-8 text-right font-semibold">Min</span>
+            <input
+              type="text"
+              value={formatNumber(minVal)}
+              onChange={(e) => onMinChange(parseNumber(e.target.value))}
+              className={`w-full text-right p-1.5 text-sm border rounded focus:ring-1 focus:outline-none transition-all
+                ${isMain ? 'border-amber-300 focus:border-amber-500' : 'border-gray-300 focus:border-blue-500'}
+                ${isMinError ? 'border-red-500 bg-red-50 focus:ring-red-200' : ''}
+              `}
+              placeholder=""
+            />
+          </div>
+          <div className="h-3.5 mt-0.5">
+            {isMinError && (
+              <div className="text-[9px] text-red-600 leading-tight text-right pl-8 font-medium">
+                Must be ≥ Min Chip
+              </div>
+            )}
+          </div>
         </div>
-        {/* Error message placeholder to prevent layout shift (CLS) */}
-        <div className="h-3.5">
-          {isMinError && (
-            <div className="text-[9px] text-red-600 leading-tight text-right pl-7 font-medium">
-              Must be ≥ Min Chip
-            </div>
-          )}
-        </div>
-      </div>
 
-      {/* Max Limit Input */}
-      <div>
-        <div className="flex items-center gap-1 mb-1">
-          <span className="text-[10px] text-gray-400 w-6 text-right font-medium">Max</span>
-          <input
-            type="text"
-            value={formatNumber(maxVal)}
-            onChange={(e) => onMaxChange(parseNumber(e.target.value))}
-            className={`w-full text-right p-1 text-sm border rounded focus:ring-1 focus:outline-none transition-all
-              ${isMain ? 'border-amber-300 focus:border-amber-500' : 'border-gray-300 focus:border-blue-500'}
-              ${isMaxError ? 'border-red-500 bg-red-50 focus:ring-red-200' : ''}
-            `}
-          />
-        </div>
-        {/* Error message placeholder to prevent layout shift (CLS) */}
-        <div className="h-3.5">
-          {isMaxError && (
-            <div className="text-[9px] text-red-600 leading-tight text-right pl-7 font-medium">
-              Must be ≥ Min Limit
-            </div>
-          )}
+        {/* Max Limit Input */}
+        <div>
+          <div className="flex items-center gap-1">
+            <span className="text-[10px] text-gray-500 w-8 text-right font-semibold">Max</span>
+            <input
+              type="text"
+              value={formatNumber(maxVal)}
+              onChange={(e) => onMaxChange(parseNumber(e.target.value))}
+              className={`w-full text-right p-1.5 text-sm border rounded focus:ring-1 focus:outline-none transition-all
+                ${isMain ? 'border-amber-300 focus:border-amber-500' : 'border-gray-300 focus:border-blue-500'}
+                ${isMaxError ? 'border-red-500 bg-red-50 focus:ring-red-200' : ''}
+              `}
+              placeholder=""
+            />
+          </div>
+          <div className="h-3.5 mt-0.5">
+            {isMaxError && (
+              <div className="text-[9px] text-red-600 leading-tight text-right pl-8 font-medium">
+                Must be ≥ Min Limit
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -381,6 +382,13 @@ const App = () => {
     setSearchResults(newResults);
   };
 
+  // Logic: Toggle Status
+  const handleToggleStatus = (index) => {
+    const newResults = [...searchResults];
+    newResults[index].status = newResults[index].status === 'Enable' ? 'Disable' : 'Enable';
+    setSearchResults(newResults);
+  };
+
   // Logic: Save Modified Row
   const handleSaveRow = (index) => {
     const item = searchResults[index];
@@ -555,7 +563,7 @@ const App = () => {
               {/* Limits Matrix */}
               <div>
                 <h3 className="text-sm font-bold text-gray-700 mb-3 border-l-4 border-amber-500 pl-2">Limit Configuration</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 items-stretch">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
                   {/* Use LimitInputGroup component and pass all ratio and MinChip values */}
                   <LimitInputGroup 
                     title="Banker/Player" isMain={true} minChipLimit={newLimit.minChip}
@@ -691,14 +699,16 @@ const App = () => {
                                 Min Chip: <span className="text-gray-500 font-semibold">{formatNumber(item.minChip)}</span> {/* Gray font */}
                               </span>
                             </div>
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-gray-500">Status:</span>
-                                {/* Status toggle display */}
-                                <span className={`px-2 py-0.5 text-xs font-medium rounded ${item.status === 'Enable' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                              <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-bold text-gray-500">Status:</span>
+                                  <button
+                                    onClick={() => handleToggleStatus(idx)}
+                                    className={`px-3 py-1 text-xs font-medium rounded transition-colors ${item.status === 'Enable' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}
+                                  >
                                     {item.status}
-                                </span>
-                              </div>
+                                  </button>
+                                </div>
                               <button 
                                 onClick={() => handleSaveRow(idx)}
                                 className="bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 flex items-center gap-1"
@@ -710,7 +720,7 @@ const App = () => {
 
                           {/* Editable Grid */}
                           <div className="p-4 overflow-x-auto">
-                            <div className="flex gap-2 min-w-max items-stretch">
+                            <div className="flex gap-2 min-w-max">
                                {/* Use the same LimitInputGroup component for modification */}
                                <LimitInputGroup title="Banker/Player" isMain={true} minChipLimit={item.minChip}
                                   minRatio={MIN_RATIOS.bp} maxRatio={MAX_RATIOS.bp}
