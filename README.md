@@ -16,7 +16,7 @@
 
 ## 簡介
 
-`index_02.html` 為單一檔案的前端管理介面（使用純 React + Babel 在瀏覽器執行），用於建立與修改 Baccarat 的 Bet Limit 設定。UI 為管理員操作介面，提供搜尋、編輯與建立新 Bet Limit 的功能。
+`index.html` 為單一檔案的前端管理介面（使用純 React + Babel 在瀏覽器執行），用於建立與修改 Baccarat 的 Bet Limit 設定。UI 為管理員操作介面，提供搜尋、編輯與建立新 Bet Limit 的功能。
 
 ## 主要功能與工作流程
 
@@ -94,13 +94,13 @@ flowchart TD
 
 ## 本地測試與驗證步驟
 
-1. 直接在瀏覽器打開 `docs/index_02.html`：
+1. 直接在瀏覽器打開 `docs/index.html`：
 
 ```pwsh
 # 從當前資料夾啟動一個簡單的 HTTP server（使用 PowerShell）
 # 需要 Python 已安裝，可選用 python -m http.server
 python -m http.server 8000
-# 然後在瀏覽器打開 http://localhost:8000/docs/index_02.html
+# 然後在瀏覽器打開 http://localhost:8000/docs/index.html
 ```
 
 2. 驗證要點：
@@ -123,4 +123,5 @@ python -m http.server 8000
 ---
 
 
-文件根據目前 `index_02.html` 的程式內容自動生成。如需更完整的系統架構圖或更詳細的端到端資料流（例如 API 規格），我可以再增加。
+文件根據目前 `index.html` 的程式內容自動生成。如需更完整的系統架構圖或更詳細的端到端資料流（例如 API 規格），我可以再增加。
+
