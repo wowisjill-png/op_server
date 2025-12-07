@@ -54,22 +54,49 @@ const MAX_RATIOS = {
 
 // Mock Initial Data - IDs start from 10001 (5 digits)
 const MOCK_DATA = [
+  // LiveCasino_A examples
   {
     id: '10001', website: 'LiveCasino_A', currency: 'USD', minChip: 5, status: 'Enable',
-    limits: {
-      bp: { min: 100, max: 10000 }, tie: { min: 10, max: 1000 }, pair: { min: 10, max: 900 },
-      bonus: { min: 10, max: 900 }, bigSmall: { min: 100, max: 10000 }, anyPair: { min: 10, max: 2000 },
-      perfectPair: { min: 10, max: 400 }, superSix: { min: 10, max: 800 },
-    },
+    limits: { bp: { min: 100, max: 10000 }, tie: { min: 10, max: 1000 }, pair: { min: 10, max: 900 }, bonus: { min: 10, max: 900 }, bigSmall: { min: 100, max: 10000 }, anyPair: { min: 10, max: 2000 }, perfectPair: { min: 10, max: 400 }, superSix: { min: 10, max: 800 } },
   },
   {
     id: '10002', website: 'LiveCasino_A', currency: 'CNY', minChip: 20, status: 'Disable',
-    limits: {
-      bp: { min: 500, max: 50000 }, tie: { min: 50, max: 5000 }, pair: { min: 50, max: 4500 },
-      bonus: { min: 50, max: 4500 }, bigSmall: { min: 500, max: 50000 }, anyPair: { min: 50, max: 10000 },
-      perfectPair: { min: 50, max: 2000 }, superSix: { min: 50, max: 4000 },
-    },
+    limits: { bp: { min: 500, max: 50000 }, tie: { min: 50, max: 5000 }, pair: { min: 50, max: 4500 }, bonus: { min: 50, max: 4500 }, bigSmall: { min: 500, max: 50000 }, anyPair: { min: 50, max: 10000 }, perfectPair: { min: 50, max: 2000 }, superSix: { min: 50, max: 4000 } },
   },
+
+  // LiveCasino_B examples
+  {
+    id: '10003', website: 'LiveCasino_B', currency: 'HKD', minChip: 20, status: 'Enable',
+    limits: { bp: { min: 200, max: 20000 }, tie: { min: 20, max: 2000 }, pair: { min: 20, max: 1800 }, bonus: { min: 20, max: 1800 }, bigSmall: { min: 200, max: 20000 }, anyPair: { min: 20, max: 4000 }, perfectPair: { min: 20, max: 800 }, superSix: { min: 20, max: 1600 } },
+  },
+  {
+    id: '10004', website: 'LiveCasino_B', currency: 'JPY', minChip: 500, status: 'Disable',
+    limits: { bp: { min: 1000, max: 100000 }, tie: { min: 100, max: 10000 }, pair: { min: 100, max: 9000 }, bonus: { min: 100, max: 9000 }, bigSmall: { min: 1000, max: 100000 }, anyPair: { min: 100, max: 20000 }, perfectPair: { min: 100, max: 8000 }, superSix: { min: 100, max: 16000 } },
+  },
+
+  // Sportsbook examples
+  {
+    id: '10005', website: 'Sportsbook', currency: 'SGD', minChip: 10, status: 'Enable',
+    limits: { bp: { min: 50, max: 5000 }, tie: { min: 5, max: 500 }, pair: { min: 5, max: 450 }, bonus: { min: 5, max: 450 }, bigSmall: { min: 50, max: 5000 }, anyPair: { min: 5, max: 1000 }, perfectPair: { min: 5, max: 200 }, superSix: { min: 5, max: 400 } },
+  },
+  {
+    id: '10006', website: 'Sportsbook', currency: 'TWD', minChip: 100, status: 'Enable',
+    limits: { bp: { min: 500, max: 50000 }, tie: { min: 50, max: 5000 }, pair: { min: 50, max: 4500 }, bonus: { min: 50, max: 4500 }, bigSmall: { min: 500, max: 50000 }, anyPair: { min: 50, max: 10000 }, perfectPair: { min: 50, max: 2000 }, superSix: { min: 50, max: 4000 } },
+  },
+
+  // Gamelobby examples
+  {
+    id: '10007', website: 'Gamelobby', currency: 'USD', minChip: 5, status: 'Enable',
+    limits: { bp: { min: 80, max: 8000 }, tie: { min: 8, max: 800 }, pair: { min: 8, max: 720 }, bonus: { min: 8, max: 720 }, bigSmall: { min: 80, max: 8000 }, anyPair: { min: 8, max: 1600 }, perfectPair: { min: 8, max: 320 }, superSix: { min: 8, max: 640 } },
+  },
+  {
+    id: '10008', website: 'Gamelobby', currency: 'CNY', minChip: 20, status: 'Disable',
+    limits: { bp: { min: 400, max: 40000 }, tie: { min: 40, max: 4000 }, pair: { min: 40, max: 3600 }, bonus: { min: 40, max: 3600 }, bigSmall: { min: 400, max: 40000 }, anyPair: { min: 40, max: 8000 }, perfectPair: { min: 40, max: 1600 }, superSix: { min: 40, max: 3200 } },
+  },
+  {
+    id: '10009', website: 'Gamelobby', currency: 'TWD', minChip: 100, status: 'Disable',
+    limits: { bp: { min: 1000, max: 10000 }, tie: { min: 100, max: 1000 }, pair: { min: 100, max: 900 }, bonus: { min: 100, max: 900 }, bigSmall: { min: 1000, max: 10000 }, anyPair: { min: 100, max: 2000 }, perfectPair: { min: 100, max: 400 }, superSix: { min: 100, max: 800 } },
+  }
 ];
 
 // --- Helper Functions ---
@@ -223,6 +250,18 @@ const App = () => {
   });
   const [searchResults, setSearchResults] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Ensure lucide replaces <i data-lucide> elements with SVG after render
+  useEffect(() => {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      try {
+        window.lucide.createIcons();
+      } catch (e) {
+        // swallow errors - lucide availability can be intermittent in dev
+        // console.warn('lucide.createIcons failed', e);
+      }
+    }
+  }, [activeTab, searchResults]);
 
   // --- Notification Helper ---
   const showNotification = (msg, type = 'success') => {
