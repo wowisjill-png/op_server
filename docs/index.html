@@ -14,7 +14,7 @@
   <div id="root"></div>
   
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
     
     // Lucide Icons Components
     const Search = (props) => React.createElement('i', { 'data-lucide': 'search', ...props });
@@ -222,6 +222,7 @@ const App = () => {
   const [activeTab, setActiveTab] = useState('search'); // 'search' | 'create'
   const [data, setData] = useState(MOCK_DATA);
   const [notification, setNotification] = useState(null);
+  const notificationTimerRef = useRef(null);
 
   // --- Create Form State ---
   const initialLimits = {
@@ -264,9 +265,21 @@ const App = () => {
   }, [activeTab, searchResults]);
 
   // --- Notification Helper ---
-  const showNotification = (msg, type = 'success') => {
-    setNotification({ msg, type });
-    setTimeout(() => setNotification(null), 3000);
+  const showNotification = (msg, type = 'success', autoDismiss = true) => {
+    // clear any existing timer
+    if (notificationTimerRef.current) {
+      clearTimeout(notificationTimerRef.current);
+      notificationTimerRef.current = null;
+    }
+
+    setNotification({ msg, type, autoDismiss });
+
+    if (autoDismiss) {
+      notificationTimerRef.current = setTimeout(() => {
+        setNotification(null);
+        notificationTimerRef.current = null;
+      }, 3000);
+    }
   };
 
   // --- Logic: Simulate Server Min Chip Fetch ---
@@ -321,6 +334,11 @@ const App = () => {
     // Basic validation
     if (!newLimit.website) return showNotification('Please select a Website.', 'error');
     if (!newLimit.currency) return showNotification('Please select a Currency.', 'error');
+    // If user provided an ID, ensure it's unique
+    if (newLimit.id) {
+      const exists = data.some(d => String(d.id).toLowerCase() === String(newLimit.id).toLowerCase());
+      if (exists) return showNotification('Bet Limit ID already exists. Please choose another ID or leave empty to auto-generate.', 'error', false);
+    }
     
     // Use the Min Chip value from the defaults if currency is selected, otherwise use the temporary 0 value
     const currentMinChip = newLimit.currency ? MIN_CHIP_DEFAULTS[newLimit.currency] : 0;
@@ -462,6 +480,45 @@ const App = () => {
     showNotification(`Bet Limit ${item.id} updated successfully!`);
   };
 
+  // Logic: Copy a search result row into Create form with a new ID
+  const handleCopyToCreate = (index) => {
+    const item = searchResults[index];
+    if (!item) return showNotification('Unable to copy: source item not found', 'error');
+
+    // Generate a new ID for the copied item
+    const newId = getNextBetLimitId(data);
+
+    // Convert limits for UI (strings) - make sure values are strings for inputs
+    const limitsForForm = JSON.parse(JSON.stringify(item.limits));
+    Object.keys(limitsForForm).forEach(k => {
+      limitsForForm[k].min = limitsForForm[k].min !== undefined && limitsForForm[k].min !== null ? String(limitsForForm[k].min) : '';
+      limitsForForm[k].max = limitsForForm[k].max !== undefined && limitsForForm[k].max !== null ? String(limitsForForm[k].max) : '';
+    });
+
+    // Populate the create form state
+    setNewLimit({
+      id: '', // keep empty so user can generate or auto-generate; we'll set id only when saving, but UI requested auto-new id: generate but keep field empty for user clarity
+      website: item.website,
+      currency: item.currency,
+      minChip: item.minChip || (item.currency ? MIN_CHIP_DEFAULTS[item.currency] : 0),
+      limits: limitsForForm,
+    });
+
+    // Set baseMin/baseMax according to the bp type if available (use bp min/max as base if present)
+    const bpMin = parseNumber(item.limits.bp.min) !== '' ? String(parseNumber(item.limits.bp.min)) : '';
+    const bpMax = parseNumber(item.limits.bp.max) !== '' ? String(parseNumber(item.limits.bp.max)) : '';
+    setBaseMin(bpMin);
+    setBaseMax(bpMax);
+
+    // Switch to create tab
+    setActiveTab('create');
+
+    // Auto-generate and set ID in the input so it is visible but distinct from existing IDs
+    setNewLimit(prev => ({ ...prev, id: newId }));
+
+    showNotification(`Copied ${item.id} to Create form (new ID ${newId})`, 'success');
+  };
+
   return (
     // Use max-w-7xl wide container, suitable for admin UI
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans p-6">
@@ -497,9 +554,20 @@ const App = () => {
         <div className="p-6">
           {/* Notification */}
           {notification && (
-            <div className={`mb-4 p-4 rounded-md flex items-center gap-2 ${notification.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
-              <AlertCircle className="w-5 h-5" />
-              {notification.msg}
+            <div className={`mb-4 p-4 rounded-md flex items-center justify-between gap-2 ${notification.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-5 h-5" />
+                <div className="text-sm">{notification.msg}</div>
+              </div>
+              <div>
+                <button
+                  onClick={() => { if (notificationTimerRef.current) { clearTimeout(notificationTimerRef.current); notificationTimerRef.current = null; } setNotification(null); }}
+                  className="text-xs px-2 py-1 rounded bg-white/10 hover:bg-white/20"
+                  aria-label="Close notification"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           )}
 
@@ -773,12 +841,21 @@ const App = () => {
                                     {item.status}
                                   </button>
                                 </div>
-                              <button 
-                                onClick={() => handleSaveRow(idx)}
-                                className="bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 flex items-center gap-1"
-                              >
-                                <Save className="w-3 h-3" /> Save Changes
-                              </button>
+                                  <div className="flex items-center gap-2">
+                                  <button 
+                                    onClick={() => handleSaveRow(idx)}
+                                    className="bg-blue-600 text-white px-3 py-1 rounded text-xs font-medium hover:bg-blue-700 flex items-center gap-1"
+                                  >
+                                    <Save className="w-3 h-3" /> Save Changes
+                                  </button>
+                                  <button
+                                    onClick={() => handleCopyToCreate(idx)}
+                                    className="bg-gray-700 text-white px-3 py-1 rounded text-xs font-medium hover:bg-gray-800 flex items-center gap-1"
+                                    title="Copy this row to Create New"
+                                  >
+                                    Copy
+                                  </button>
+                                  </div>
                             </div>
                           </div>
 
