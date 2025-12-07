@@ -1,7 +1,33 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Save, Plus, AlertCircle, Calculator, Info, RefreshCw, Lock, Shuffle } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bet Limit Configuration (Baccarat)</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+    
+    // Lucide Icons Components
+    const Search = (props) => React.createElement('i', { 'data-lucide': 'search', ...props });
+    const Save = (props) => React.createElement('i', { 'data-lucide': 'save', ...props });
+    const Plus = (props) => React.createElement('i', { 'data-lucide': 'plus', ...props });
+    const AlertCircle = (props) => React.createElement('i', { 'data-lucide': 'alert-circle', ...props });
+    const Calculator = (props) => React.createElement('i', { 'data-lucide': 'calculator', ...props });
+    const Info = (props) => React.createElement('i', { 'data-lucide': 'info', ...props });
+    const RefreshCw = (props) => React.createElement('i', { 'data-lucide': 'refresh-cw', ...props });
+    const Lock = (props) => React.createElement('i', { 'data-lucide': 'lock', ...props });
+    const Shuffle = (props) => React.createElement('i', { 'data-lucide': 'shuffle', ...props });
 
-// --- Constants & Mock Data ---
+    // --- Constants & Mock Data ---
 
 const WEBSITES = ['Gamelobby', 'Sportsbook', 'LiveCasino_A', 'LiveCasino_B'];
 const CURRENCIES = ['USD', 'CNY', 'HKD', 'JPY', 'TWD', 'SGD'];
@@ -750,4 +776,16 @@ const App = () => {
   );
 };
 
-export default App;
+// Render the app
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// Initialize Lucide icons after render
+setTimeout(() => {
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+}, 100);
+
+  </script>
+</body>
+</html>
