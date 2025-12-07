@@ -1,6 +1,6 @@
 # Bet Limit Configuration (Baccarat) — System Analysis
 
-此文件根據 `index_02.html`（單檔 React 管理介面）的程式碼撰寫，目的在於提供系統分析、設計重點、資料流程、以及如何在本地環境測試與驗證。本版本整合最近的變更：包含 Copy-to-Create 功能、持久通知（可手動關閉）、字型調整（Fira Code）、以及擴充的 MOCK_DATA 測試資料。
+此文件根據 `index.html`（單檔 React 管理介面）的程式碼撰寫，目的在於提供系統分析、設計重點、資料流程、以及如何在本地環境測試與驗證。本版本整合最近的變更：包含 Copy-to-Create 功能、持久通知（可手動關閉）、字型調整（Fira Code）、以及擴充的 MOCK_DATA 測試資料。
 
 **目錄**
 - 簡介
@@ -16,7 +16,7 @@
 
 ## 簡介
 
-`index_02.html` 為單一檔案的前端管理介面（使用 React + Babel 在瀏覽器執行），用於建立與修改 Baccarat 的 Bet Limit 設定。UI 為管理員操作介面，提供搜尋、編輯、建立新 Bet Limit，以及把現有設定複製到建立表單的功能。
+`index.html` 為單一檔案的前端管理介面（使用 React + Babel 在瀏覽器執行），用於建立與修改 Baccarat 的 Bet Limit 設定。UI 為管理員操作介面，提供搜尋、編輯、建立新 Bet Limit，以及把現有設定複製到建立表單的功能。
 
 ## 主要功能與工作流程
 
@@ -99,13 +99,13 @@ flowchart TD
 
 ## 本地測試與驗證步驟
 
-1. 直接在瀏覽器打開 `docs/index_02.html`：
+1. 直接在瀏覽器打開 `docs/index.html`：
 
 ```pwsh
 # 從當前資料夾啟動一個簡單的 HTTP server（使用 PowerShell）
 # 需要 Python 已安裝，可選用 python -m http.server
 python -m http.server 8000
-# 然後在瀏覽器打開 http://localhost:8000/docs/index_02.html
+# 然後在瀏覽器打開 http://localhost:8000/docs/index.html
 ```
 
 2. 驗證要點：
@@ -136,4 +136,5 @@ python -m http.server 8000
 
 ---
 
-文件根據目前 `index_02.html` 的程式內容生成。如需更多圖表（例如端到端 API 規格、資料庫欄位對照表或測試案例），我可以繼續補充。
+文件根據目前 `index.html` 的程式內容生成。如需更多圖表（例如端到端 API 規格、資料庫欄位對照表或測試案例），我可以繼續補充。
+
